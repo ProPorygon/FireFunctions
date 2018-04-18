@@ -1,6 +1,10 @@
 # fire_functions
 
-A new flutter plugin project.
+Plugin to call Firebase Callable Functions from a Flutter App
+
+Currently only works on Android, iOS support coming in the future
+
+Quick and dirty implementation, no guarantees it works without some time and configuration
 
 ## Getting Started
 
