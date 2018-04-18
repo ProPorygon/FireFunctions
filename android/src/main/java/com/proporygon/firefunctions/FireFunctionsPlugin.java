@@ -14,6 +14,8 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.functions.FirebaseFunctions;
@@ -47,7 +49,8 @@ public class FireFunctionsPlugin implements MethodCallHandler {
                     FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
                     FirebaseFunctionsException.Code code = ffe.getCode();
                     Object details = ffe.getDetails();
-                    return new HashMap();
+                    Log.d("FireFunctionsPlugin", code.name());
+                    throw e;
                   }
                 }
                 Map<String, Object> result = (Map) task.getResult().getData();
@@ -57,16 +60,21 @@ public class FireFunctionsPlugin implements MethodCallHandler {
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onMethodCall(MethodCall call, final Result result) {
       String functionName = call.method;
       Map<String, Object> data = (Map) call.arguments;
-      try {
-        Map functionResult = Tasks.await(functionTask(functionName, data));
-        result.success(functionResult);
-      } catch (ExecutionException e) {
-        Log.d("FireFunctionsPlugin", e.getMessage());
-      } catch (InterruptedException e) {
-        Log.d("FireFunctionsPlugin", e.getMessage());
-      }
+      Task<Map> task = functionTask(functionName, data);
+      task.addOnSuccessListener(new OnSuccessListener<Map>() {
+          @Override
+          public void onSuccess(Map map) {
+              result.success(map);
+          }
+      });
+      task.addOnFailureListener(new OnFailureListener() {
+          @Override
+          public void onFailure(@NonNull Exception e) {
+              Log.d("FunctionFailed", e.getMessage());
+          }
+      });
   }
 }

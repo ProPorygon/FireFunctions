@@ -11,8 +11,8 @@ class FireFunctions {
     return version;
   }
 
-  static Future<Map<String, dynamic>> callFunction(String functionName, Map<String, dynamic> data) async {
-    final result = await _channel.invokeMethod('callFunction', data);
+  static Future callFunction(String functionName, Map<String, dynamic> data) async {
+    final result = await _channel.invokeMethod(functionName, data);
     return result;
   }
 }
