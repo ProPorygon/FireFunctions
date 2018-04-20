@@ -1,13 +1,12 @@
 name: fire_functions
-description: A new flutter plugin project.
+description: Flutter plugin to add Firebase Callable Functions to a Flutter project.
 version: 0.0.1
-author:
+author: Kevin Renner
 homepage:
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth: 0.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
